@@ -78,8 +78,7 @@ void setup() {
 }
 
 void loop() {
-  if( millis() - t_previous > 30000 ) {
-    ppm_uart = co2.readCO2UART();
+  if( millis() - t_previous > 5000 ) {
     Serial.print(millis() / 1000);
     Serial.print(" s : ");
     
@@ -90,7 +89,6 @@ void loop() {
       Serial.print("n/a");
     }
 
-    temperature = co2.getLastTemperature();
     Serial.print(", Temperature: ");
   
     if (temperature > 0) {
@@ -100,11 +98,6 @@ void loop() {
     }
     t_previous = millis();
 
-    humid[0] = dht1.readHumidity();
-    temp[0] = dht1.readTemperature();
-    humid[1] = dht2.readHumidity();
-    temp[1] = dht2.readTemperature();
-
     Serial.print(humid[0]);
     Serial.print(", ");
     Serial.print(temp[0]);
@@ -113,21 +106,52 @@ void loop() {
     Serial.print(", ");
     Serial.println(temp[1]);
 
-    for(int i=0; i<2; i++) {
-      // Check if any reads failed and exit early (to try again).
-      if (isnan(humid[i])) {
-        humid[i] = -1;
-        Serial.println("humid is NAN");
-      }
-      if (isnan(temp[i])) {
-        temp[i] = -1;
-        Serial.println("temp is NAN");
-      }
-    }
-
     update_lcd();
     write_file();
   }
+
+  int limit=0;
+  do{
+    ppm_uart = co2.readCO2UART();
+    limit++;
+  } while( ppm_uart < 0 && limit < 10 );
+    Serial.print("PPMuart: ");
+    if (ppm_uart > 0) {
+      Serial.print(ppm_uart);
+    } else {
+      Serial.print("n/a");
+    }
+  limit=0;
+  do{
+    temperature = co2.getLastTemperature();
+    limit++;
+  } while( temperature < 0 && limit < 10 );
+    Serial.print(", Temperature: ");
+  
+    if (temperature > 0) {
+      Serial.println(temperature);
+    } else {
+      Serial.println("n/a");
+    }
+  limit=0;
+  do {
+    humid[0] = dht1.readHumidity();
+    temp[0] = dht1.readTemperature();
+    limit++;
+  } while( (isnan(humid[0]) || isnan(temp[0])) && limit < 10 );
+    Serial.print(humid[0]);
+    Serial.print(", ");
+    Serial.print(temp[0]);
+    Serial.print(", ");
+  limit=0;
+  do {
+    humid[1] = dht2.readHumidity();
+    temp[1] = dht2.readTemperature();
+    limit++;
+  } while( (isnan(humid[1]) || isnan(temp[1])) && limit < 10 );
+    Serial.print(humid[1]);
+    Serial.print(", ");
+    Serial.println(temp[1]);
 
   /*
   int ppm_pwm = co2.readCO2PWM();
