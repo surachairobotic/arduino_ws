@@ -27,7 +27,7 @@ File myFile;
 
 MHZ co2(MH_Z19_RX, MH_Z19_TX, MHZ14A);
 LiquidCrystal_I2C lcd(0x27,16,2);  // set the LCD address to 0x27 for a 16 chars and 2 line display
-DHT dht1(A0, DHTTYPE), dht2(A1, DHTTYPE);
+DHT dht1(5, DHTTYPE), dht2(6, DHTTYPE);
 
 unsigned long long t_previous=0;
 int ppm_uart, temperature;
@@ -113,6 +113,7 @@ void loop() {
   int limit=0;
   do{
     ppm_uart = co2.readCO2UART();
+    delay(1);
     limit++;
   } while( ppm_uart < 0 && limit < 10 );
     Serial.print("PPMuart: ");
@@ -124,6 +125,7 @@ void loop() {
   limit=0;
   do{
     temperature = co2.getLastTemperature();
+    delay(1);
     limit++;
   } while( temperature < 0 && limit < 10 );
     Serial.print(", Temperature: ");
