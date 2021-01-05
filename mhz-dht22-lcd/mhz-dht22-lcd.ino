@@ -85,7 +85,8 @@ void loop() {
     Serial.print("PPMuart: ");
     if (ppm_uart > 0) {
       Serial.print(ppm_uart);
-    } else {
+    }
+    else {
       Serial.print("n/a");
     }
 
@@ -93,7 +94,8 @@ void loop() {
   
     if (temperature > 0) {
       Serial.println(temperature);
-    } else {
+    }
+    else {
       Serial.println("n/a");
     }
     t_previous = millis();
@@ -116,44 +118,46 @@ void loop() {
     delay(1);
     limit++;
   } while( ppm_uart < 0 && limit < 10 );
-    Serial.print("PPMuart: ");
-    if (ppm_uart > 0) {
-      Serial.print(ppm_uart);
-    } else {
-      Serial.print("n/a");
-    }
+  Serial.print("PPMuart: ");
+  if (ppm_uart > 0) {
+    Serial.print(ppm_uart);
+  }
+  else {
+    Serial.print("n/a");
+  }
   limit=0;
   do{
     temperature = co2.getLastTemperature();
     delay(1);
     limit++;
   } while( temperature < 0 && limit < 10 );
-    Serial.print(", Temperature: ");
-  
-    if (temperature > 0) {
-      Serial.println(temperature);
-    } else {
-      Serial.println("n/a");
-    }
+  Serial.print(", Temperature: ");
+
+  if (temperature > 0) {
+    Serial.println(temperature);
+  }
+  else {
+    Serial.println("n/a");
+  }
   limit=0;
   do {
     humid[0] = dht1.readHumidity();
     temp[0] = dht1.readTemperature();
     limit++;
   } while( (isnan(humid[0]) || isnan(temp[0])) && limit < 10 );
-    Serial.print(humid[0]);
-    Serial.print(", ");
-    Serial.print(temp[0]);
-    Serial.print(", ");
+  Serial.print(humid[0]);
+  Serial.print(", ");
+  Serial.print(temp[0]);
+  Serial.print(", ");
   limit=0;
   do {
     humid[1] = dht2.readHumidity();
     temp[1] = dht2.readTemperature();
     limit++;
   } while( (isnan(humid[1]) || isnan(temp[1])) && limit < 10 );
-    Serial.print(humid[1]);
-    Serial.print(", ");
-    Serial.println(temp[1]);
+  Serial.print(humid[1]);
+  Serial.print(", ");
+  Serial.println(temp[1]);
 
   /*
   int ppm_pwm = co2.readCO2PWM();
@@ -184,7 +188,8 @@ void write_file() {
     myFile.println(txt);
     // close the file:
     myFile.close();
-  } else {
+  }
+  else {
     // if the file didn't open, print an error:
     Serial.println("error opening test.txt");
   }
